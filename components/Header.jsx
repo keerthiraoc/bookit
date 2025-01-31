@@ -1,9 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/assests/images/logo.svg";
 import { FaUser, FaSignInAlt, FaSignOutAlt, FaBuilding } from "react-icons/fa";
+import destroySession from "@/app/actions/destroySession";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 const Header = () => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const { success, error } = await destroySession();
+    if (success) {
+      router.push("/login");
+    } else {
+      toast.error(error);
+    }
+  };
+
   return (
     <header className="bg-gray-100">
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -27,13 +43,13 @@ const Header = () => {
                 </Link>
                 {/* <!-- Logged In Only --> */}
                 <Link
-                  href="/bookings.html"
+                  href="/bookings"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
                 >
                   Bookings
                 </Link>
                 <Link
-                  href="/add-room.html"
+                  href="/rooms/add"
                   className="rounded-md px-3 py-2 text-sm font-medium text-gray-800 hover:bg-gray-700 hover:text-white"
                 >
                   Add Room
@@ -60,12 +76,12 @@ const Header = () => {
               <Link href="/rooms/my">
                 <FaBuilding className="inline mr-1" /> My Rooms
               </Link>
-              <Link
-                href="/login"
+              <button
                 className="mx-3 text-gray-800 hover:text-gray-600"
+                onClick={handleLogout}
               >
                 <FaSignOutAlt className="inline mr-1" /> Sign Out
-              </Link>
+              </button>
             </div>
           </div>
         </div>
